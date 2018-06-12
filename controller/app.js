@@ -8,7 +8,7 @@ var request = require ('request');
 var cheerio = require('cheerio');
 
 //need to require the models for scraped data and comments
-var Article = require('../models/Dar.js');
+var Article = require('../models/DataScraping.js');
 var Comment = require('../models/Comment.js');
 
 //main route
@@ -71,7 +71,7 @@ router.get('/scrape', function(req, res) {
 
 //make a Get request that will grab every article and populate the DOM
 router.get('/articles', function(req, res) {
-    //allows newer articles to be on top
+    //sort articles and put newest articles on top
     Article.find().sort({_id: -1})
         //send to handlebars
         .exec(function(err, doc) {
@@ -84,7 +84,7 @@ router.get('/articles', function(req, res) {
     });
 });
 
-// This will get the articles we scraped from the mongoDB in JSON
+// This will get the articles scraped from the mongoDB in JSON
 router.get('/articles-json', function(req, res) {
     Article.find({}, function(err, doc) {
         if (err) {
@@ -110,7 +110,7 @@ router.get('/clearAll', function(req, res) {
 
 router.get('/readArticle/:id', function(req, res){
   var articleId = req.params.id;
-  var hbsObj = {
+  var articleBodyComment = {
     article: [],
     body: []
   };
@@ -122,17 +122,17 @@ router.get('/readArticle/:id', function(req, res){
       if(err){
         console.log('Error: ' + err);
       } else {
-        hbsObj.article = doc;
-        var link = doc.link;
+        articleBodyComment.article = doc;
+        var link = 'https://techcrunch.com/';
         //grab article from link
         request(link, function(error, response, html) {
           var $ = cheerio.load(html);
 
-          $('.l-col__main').each(function(i, element){
-            hbsObj.body = $(this).children('.c-entry-content').children('p').text();
-            //send article body and comments to article.handlbars through hbObj
-            res.render('article', hbsObj);
-            //prevents loop through so it doesn't return an empty hbsObj.body
+          $('.post-block post-block--image post-block--unread').each(function(i, element){
+            articleBodyComment.body = $(this).children('.post-block__content').children('p').text();
+            //send article body and comments to article.handlbars 
+            res.render('article', articleBodyComment);
+            //prevents loop through so it doesn't return an empty articleBodyComment.body
             return false;
           });
         });

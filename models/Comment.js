@@ -2,7 +2,7 @@
 var mongoose = require("mongoose");
 
 // Create a schema class with Mongoose for all data created from users that want to leave Comments on scraped articles
-var schema = mongoose.Schema;
+var Schema = mongoose.Schema;
 
 // create a Comment schema as a framework for all Comments on scraped data
 var CommentSchema = new Schema({

@@ -33,6 +33,9 @@ db.once('open', function() {
   console.log('Mongoose connection sucessful!');
 });
 
+var routes = require('./controller/app.js');
+app.use('/', routes);
+
 
 var port = process.env.PORT || 3000;
 app.listen(port, function(){

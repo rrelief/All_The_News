@@ -2,16 +2,16 @@
 var mongoose = require("mongoose");
 
 // Create a schema class with Mongoose for all data created from users that want to leave notes on scraped articles
-var schema = mongoose.Schema;
+var Schema = mongoose.Schema;
 
-// create a note schema as a framework for all notes on scraped data
-var ScrapedDataSchema = new Schema({
+// create a Article schema that acts as a framework for all scraped articles
+var ArticleSchema = new Schema({
     title: {
         type: String,
         required: true
     },
     summary: {
-        type: string,
+        type: String,
         required: true
     },
     link: {
@@ -20,12 +20,12 @@ var ScrapedDataSchema = new Schema({
     },
     notes: [{
         type: Schema.Types.ObjectId,
-        ref: "Notes"
+        ref: "Comment"
     }]
 });
 
 // Make a Note model with the Note Schema
-var ScrapedData = mongoose.model("ScrapedData", ScrapedDataSchema);
+var Article = mongoose.model("Article", ArticleSchema);
 
 // Export the Note Model so that it can be used in server.js
-module.exports = ScrapedData;
+module.exports = Article;
